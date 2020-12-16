@@ -1,0 +1,106 @@
+
+
+<div class="container">
+  <br>
+<h3 class="head" style="text-align:center;
+color:black;
+line-height: 1.8;
+letter-spacing:5px;
+text-transform: uppercase;
+text-shadow: 2px 2px rgb(240, 217, 217);"><strong>Travel and Tourism</strong></h3>
+
+<nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top">
+<i class="fas fa-car bg-light"></i>
+<ul class="navbar-nav">
+    <li class="nav-item active">
+        <a class="nav-link" href="/">Home</a>
+      </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/users/register">Sign Up</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/users/login">Login</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/#aboutus">About us</a>
+  </li>
+  <li class="nav-item" >
+    <a class="nav-link" href="/#contactus">Contact us</a>
+  </li>
+</ul>
+</nav> 
+
+<div class="jumbotron bg-light">
+  <div class="row">
+      <div class="col"></div>
+  </div>
+<div class="row">
+    <div class="col-sm-3"></div>
+    <div class="col-sm-6">
+        <div class="card-deck">
+            <div class="card bg-dark">
+                <div class="card-body text-center">
+                    <h3 style="color:white;text-align: center;">Sign Up</h3>
+                    <hr style="background-color: thistle;">
+
+                    <% if(typeof errors !='undefined'){ %>
+                      <% errors.forEach(function(error){ %>
+                        <div class="alert alert-danger alert-dismissible fade show">
+                          <button type="button" class="close" data-dismiss="alert">&times;</button>
+                          <p><%= error.msg %></p>
+                        </div>
+                      <% }); %>
+                      <% } %>
+
+                    <form action="/users/register" method="POST"> 
+                        <div class="input-group mb-3">
+                          <div class="input-group-prepend">
+                            <span class="input-group-text">Name</span>
+                          </div>
+                          <input type="text" class="form-control" placeholder="username"
+                           name="name" value="<%= typeof name != 'undefined' ? name : '' %>">
+                          
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Email</span>
+                            </div>
+                            <input type="email" class="form-control" placeholder="Enter your email"
+                             name="email" value="<%= typeof email != 'undefined' ? email : '' %>">
+                            
+                          </div>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Password</span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="Create password"
+                             name="password" value="<%= typeof password != 'undefined' ? password : '' %>">
+                            
+                          </div>
+                          <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">Password</span>
+                            </div>
+                            <input type="password" class="form-control" placeholder="confirm password"
+                             name="password2" value="<%= typeof password2 != 'undefined' ? password2 : '' %>">
+                            
+                          </div>
+                          <button type="submit" class="btn btn-primary">Create account</button>
+                          <br>
+                          <br>
+
+
+                          <a href="/users/login">Or Login</a>
+                      </form>
+                </div>
+              </div>
+        </div>
+    </div>
+    <div class="col-sm-3"></div>
+</div>
+
+</div>
+
+
+
+</div>

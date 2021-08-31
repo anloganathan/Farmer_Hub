@@ -1,4 +1,57 @@
 
-<h1 class="mt-4">Dashboard</h1>
-<p class="lead mb-3">Welcome <%= name %></p>
-<a href="/users/logout" class="btn btn-secondary">Logout</a>
+<link rel="stylesheet" href="../css/dashboard.css">
+
+<div class="topnav" id="myTopnav">
+    <a href="#home" class="active">Dashboard</a>
+    <a href="#news">Blogs</a>
+    <a href="/users/logout" style="float:right;">Logout</a>
+    <a href="#" style="float:right;"><%= name %></a>
+    
+    <a href="javascript:void(0);" style="font-size:15px;" class="icon" onclick="myFunction()">&#9776;</a>
+  </div>
+
+
+  <div class="container">
+  <form action="/upload" method="POST" enctype="multipart/form-data">
+  <div class="file-upload">
+    <button class="file-upload-btn" type="submit"> Process Image</button>
+  
+    <div class="image-upload-wrap">
+      <input class="file-upload-input" type='file'  name="image" onchange="readURL(this);" accept="image/*" />
+      <div class="drag-text">
+        <h3>Choose Image</h3>
+      </div>
+    </div>
+    <div class="file-upload-content">
+      <img class="file-upload-image" src="#" alt="your image" />
+      <div class="image-title-wrap">
+        <button type="button" onclick="removeUpload()" class="remove-image">Remove <span class="image-title">Uploaded Image</span></button>
+      </div>
+    </div>
+  </div>
+</form>
+</div>
+
+  <div class="container">
+    <div class="row">
+        <div class="col-sm-1">
+
+        </div>
+        <div class="col-sm-10">
+            <div class="polaroid">
+                <div class="container">
+                   
+                  <p class="lead mb-3"><%= data %></p>
+                </div>
+              </div>
+        </div>
+        <div class="col-sm-1">
+            
+        </div>
+    </div>
+  </div>
+  
+<script src="../dashboard.js">
+   
+</script>
+

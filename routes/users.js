@@ -10,6 +10,11 @@ var nodemailer = require('nodemailer');
 const User=require('../models/User');
 
 //login page
+router.get('/',(req,res)=>{
+    res.redirect('/users/login');
+});
+
+//login page
 router.get('/login',(req,res)=>{
     res.render('login');
 });
@@ -75,7 +80,7 @@ router.post('/register',(req,res)=>{
                         newuser.save()
                         .then(user=>{
                             req.flash('success_msg','You are registered successfully!');
-                            var transporter = nodemailer.createTransport({
+                            /*var transporter = nodemailer.createTransport({
                                 service: 'gmail',
                                 auth: {
                                   user: process.env.guser,
@@ -96,7 +101,7 @@ router.post('/register',(req,res)=>{
                                 } else {
                                   console.log('Email sent',info.response);
                                 }
-                              });
+                              });*/
                             //req.flash('error_msg','Something went wrong!');
                             res.redirect('/users/login');
                         })

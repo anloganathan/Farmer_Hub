@@ -21,8 +21,6 @@ var upload = multer({ storage: storage });
 
 var APIurl = "https://plant-disease-detector-pytorch.herokuapp.com/"
 
-var data=""
-
 router.get('/',(req,res)=>{
     res.render('welcome');
 });
@@ -30,7 +28,9 @@ router.get('/',(req,res)=>{
 router.get('/dashboard',ensureAuthenticated,(req,res)=>{
     res.render('dashboard',{
         name:req.user.name,
-        data:data
+        disease:"",
+        plant:"",
+        remedy:""
     });
 })
 
@@ -55,10 +55,14 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
     })
     .then(r => r.json()) // expecting a json response
     .then(json => {
-        console.log("data : ")
-        console.log(json);
-        data=JSON.stringify(json);
-        res.redirect('/dashboard');
+        //console.log("data : ")
+       // console.log(json);
+        res.render('dashboard',{
+            name:req.user.name,
+            disease:json.disease,
+            plant:json.plant,
+            remedy:json.remedy
+        });
         fs.unlink(imgPath,err=>{
             if(err){
                 console.log("error deleting temp image file");

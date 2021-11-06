@@ -2,6 +2,7 @@ const express=require('express');
 const router=express.Router();
 const {ensureAuthenticated}=require('../config/auth');
 const Post=require('../models/post');
+const comments=require('../models/comments');
 
 router.post('/',ensureAuthenticated,(req,res)=>{
     var obj=new Post({
@@ -33,11 +34,44 @@ router.get('/',ensureAuthenticated,(req,res)=>{
             });
         }
         else{
-            console.log(r);
+            //console.log(r);
             res.render('forum',{posts:r,name:req.user.name});
         }
     }).sort({_id:-1}).limit(10);
 });
 
+router.get('/loadComments/:id',(req,res)=>{
+    comments.find({queryID:req.params.id},(err,r)=>{
+        if(err){
+            console.log("Error fetching comments...");
+        }
+        else{
+            console.log("Feteched comments");
+            res.send(JSON.stringify(r));
+        }
+    })
+});
+
+router.post('/reply',(req,res)=>{
+    console.log(req.body);
+    var reply=new comments({
+        queryID:req.body.queryID,
+        comment:req.body.reply,
+        commentBy:req.body.name,
+        time:Date.now()
+    });
+    reply.save((e,r)=>{
+        if(e){
+            console.log(e);
+            console.log("Error pushing comment to db");
+        }
+        else{
+            console.log("Comment saved!");
+        }
+    })
+    req.flash('success_msg','Reply Posted!..');
+    res.redirect('/forum');
+
+})
 
 module.exports=router;

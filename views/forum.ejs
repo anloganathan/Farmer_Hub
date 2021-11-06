@@ -1,6 +1,6 @@
 
 <!-- Sidebar/menu -->
-<nav class="w3-sidebar w3-bar-block w3-collapse w3-border-right w3-black" style="z-index:3;width:250px" id="mySidebar">
+<nav class="w3-sidebar w3-bar-block w3-collapse w3-border-right w3-dark-grey" style="z-index:3;width:250px" id="mySidebar">
     <div class="w3-container w3-display-container w3-padding-16">
       <!--<i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>-->
       <h3 class="w3-wide"><b>Farmer Hub</b></h3>
@@ -22,9 +22,25 @@
   </nav>
   
   <!-- Top menu on small screens -->
-  <header class="w3-bar w3-top w3-hide-large w3-black w3-xlarge">
-    <div class="w3-bar-item w3-padding-24 w3-wide" >Farmer Hub</div>
-    <a href="javascript:void(0)" class="w3-bar-item w3-button w3-padding-24 w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+  <header class="w3-bar w3-top w3-hide-large">
+    <div class="container">
+      <div class="row w3-dark-grey">
+        <div class="col-2 pt-2">
+          <button class=" w3-button " onclick="document.getElementById('id01').style.display='block'" style="text-decoration: none;">Post</button>
+        </div>
+        <div class="col-8 pt-2 ">
+          <div class="input-group mb-3 ">
+            <input type="text" class="form-control" placeholder="Search">
+            <div class="input-group-append">
+              <button class="btn btn-success" type="submit">Go</button>  
+             </div>
+          </div>
+        </div>
+        <div class="col-2 pt-2">
+          <a href="javascript:void(0)" class="w3-bar-item w3-button w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></a>
+        </div>
+      </div>
+    </div>
   </header>
   
   <!-- Overlay effect when opening sidebar on small screens -->
@@ -39,7 +55,92 @@
   
     <div class="w3-container">
        
-        <h4>Forum</h4>
+      <header class="w3-hide-small">
+        <div class="container">
+          <div class="row w3-dark-grey">
+            <div class="col-2 pt-2">
+              <button class=" w3-button " onclick="document.getElementById('id01').style.display='block'" style="text-decoration: none;">Post</button>
+            </div>
+            <div class="col-10 pt-2 ">
+              <div class="input-group mb-3 ">
+                <input type="text" class="form-control" placeholder="Search">
+                <div class="input-group-append">
+                  <button class="btn btn-success" type="submit">Go</button>  
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      
+      
+      <div id="id01" class="w3-modal">
+        <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+    
+          <div class="w3-center"><br>
+            <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+           
+          </div>
+    
+          <form class="w3-container" action="/forum" method="POST">
+            <div class="form-group">
+              <label for="exampleFormControlTextarea1">Ask your Question below</label>
+              <textarea class="form-control" id="exampleFormControlTextarea1" name="post" rows="3"></textarea>
+              <button class="w3-button w3-block w3-green w3-section w3-padding" type="submit">Post</button>
+            </div>
+          </form>
+    
+          <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+            <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-red">Cancel</button>
+          </div>
+    
+        </div>
+      </div>
+
+      <% if(success_msg!=''){ %>
+        <div class="alert alert-success alert-dismissible fade show">
+          
+          <p><%= success_msg %></p>
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+      
+        </div>
+      <% } %>
+
+      <% if(error_msg!=''){ %>
+        <div class="alert alert-warning alert-dismissible fade show">
+          
+          <p><%= error_msg %></p>
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+      
+        </div>
+      <% } %>
+
+      <% if(posts!=''){ %>
+          
+          <% for (var i=0;i < posts.length;i++){ %>
+
+            <div class="w3-card-4 w3-margin w3-panel w3-border w3-round-xlarge" style="width:95%">
+              <header class="w3-container w3-dark-grey w3-panel w3-border w3-round-xlarge">
+                
+                <h6>Posted by <%= posts[i].name %>  &nbsp; on  <%= posts[i].time.toDateString() %>  </h6>
+              </header>
+              <div class="w3-container">
+                <p><%= posts[i].query %></p>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <button class="w3-button w3-block w3-light-grey w3-panel w3-border w3-round-xlarge">Load Comments</button>
+                </div>
+                <div class="col-6">
+                  <button class="w3-button w3-block w3-light-grey w3-panel w3-border w3-round-xlarge">Reply</button>
+                </div>
+              </div>
+             
+            </div>
+            
+          <% } %>   
+      <% } %>
+
 
     </div>
 </div>

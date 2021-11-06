@@ -72,7 +72,7 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
     .catch(err =>{
         console.log("Error in Procesing")
         console.log(err);
-        data="ERROR OCCURRED IN PROCESSING YOUR IMAGE"
+        
         res.redirect('/dashboard');
     });
     

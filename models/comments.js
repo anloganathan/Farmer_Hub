@@ -10,8 +10,8 @@ const CommentSchema = new mongoose.Schema({
         required:true
     },
     time:{
-        type:Date,
-        default:Date.now
+        type:String,
+        required:true
     },
     commentBy:{
         type:String,

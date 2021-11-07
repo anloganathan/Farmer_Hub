@@ -1,6 +1,6 @@
 function loadComments(id) {
     const xhttp = new XMLHttpRequest();
-    console.log(id);
+    //console.log(id);
     xhttp.onload = function() {
     var ele=document.getElementById('Comments'+id);
     ele.parentNode.style.display="block";
@@ -9,18 +9,23 @@ function loadComments(id) {
     var array=JSON.parse(this.responseText);
     for(var i=0;i<array.length;i++){
         var row=document.createElement('div');
-        row.setAttribute('class','row w3-panel w3-border w3-round-xlarge');
+        row.setAttribute('class','row');
         var col=document.createElement('div');
-        col.setAttribute('class','col-10');
-        var user=document.createElement('div');
-        var uText=document.createTextNode(array[i].commentBy +" on "+array[i].time);
+        col.setAttribute('class','col-12');
+        var field=document.createElement('fieldset');
+        field.setAttribute('class','w3-panel w3-border w3-round-small w3-leftbar w3-border-grey');
+        var user=document.createElement('legend');
+        user.style.fontSize="12px"
+        user.style.fontStyle="italic"
+        var uText=document.createTextNode(" comment by " +array[i].commentBy +"  on "+array[i].time);
         user.appendChild(uText);
         var comment = document.createElement('div');
         var cText = document.createTextNode(array[i].comment);
         comment.appendChild(cText);
         comment.setAttribute('id',array[i]._id);
-        col.appendChild(user);
-        col.appendChild(comment);
+        field.appendChild(user);
+        field.appendChild(comment);
+        col.appendChild(field);
         row.appendChild(col);
         ele.appendChild(row);
     }
@@ -38,3 +43,18 @@ function loadReply(id){
 function delReply(id){
     document.getElementById(id).style.display="none";
 }
+
+function delPost(id) {
+    var del = confirm("Are you sure that you want to delete this post?");
+  if (del == true) {
+   console.log(id+" "+del);
+   const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+        if(this.responseText=="deleted"){
+            location.reload();
+        }
+    }
+    xhttp.open("GET", "/forum/deletePost/"+id);
+    xhttp.send();
+  }
+  }

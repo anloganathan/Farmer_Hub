@@ -3,6 +3,7 @@ const router=express.Router();
 const {ensureAuthenticated}=require('../config/auth');
 const Post=require('../models/post');
 const comments=require('../models/comments');
+const { compareSync } = require('bcryptjs');
 
 router.post('/',ensureAuthenticated,(req,res)=>{
     var obj=new Post({
@@ -58,7 +59,7 @@ router.post('/reply',(req,res)=>{
         queryID:req.body.queryID,
         comment:req.body.reply,
         commentBy:req.body.name,
-        time:Date.now()
+        time:formatted_date()
     });
     reply.save((e,r)=>{
         if(e){
@@ -73,5 +74,35 @@ router.post('/reply',(req,res)=>{
     res.redirect('/forum');
 
 })
+
+router.get('/deletePost/:id',(req,res)=>{
+    Post.findByIdAndRemove(req.params.id,(err,r)=>{
+        if(err){
+            console.log("Error deletng post...");
+        }
+        else{
+            console.log("Deleted Post");
+            comments.deleteMany({queryID:req.params.id},(e,re)=>{
+                if(err){
+                    console.log("error deleting replies..");
+                }
+                else{
+                    console.log("Comments Deleted");
+                    res.send("deleted");
+                }
+            })
+        }
+    })
+});
+
+function formatted_date()
+{
+   var result="";
+   var d = new Date(Date.now());
+   result += d.getFullYear()+"/"+(d.getMonth()+1)+"/"+d.getDate() + 
+             " "+ d.getHours()+":"+d.getMinutes();
+   return result;
+}
+
 
 module.exports=router;

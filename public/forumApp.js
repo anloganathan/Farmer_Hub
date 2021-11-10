@@ -19,10 +19,19 @@ function loadComments(id) {
         user.style.fontStyle="italic"
         var uText=document.createTextNode(" comment by " +array[i].commentBy +"  on "+array[i].time);
         user.appendChild(uText);
+
+        if(array[i].commentBy==document.getElementById("user").innerHTML){
+            var trash=document.createElement('div');
+            trash.setAttribute('class','btn btn-danger fa fa-trash');
+            trash.style.cssFloat='right';
+            trash.setAttribute('id',array[i]._id);
+            trash.addEventListener('click',delComment);
+            user.appendChild(trash);
+            }
+
         var comment = document.createElement('div');
         var cText = document.createTextNode(array[i].comment);
         comment.appendChild(cText);
-        comment.setAttribute('id',array[i]._id);
         field.appendChild(user);
         field.appendChild(comment);
         col.appendChild(field);
@@ -50,11 +59,28 @@ function delPost(id) {
    console.log(id+" "+del);
    const xhttp = new XMLHttpRequest();
     xhttp.onload = function() {
-        if(this.responseText=="deleted"){
+        if(this.responseText=="PostDeleted"){
             location.reload();
         }
     }
     xhttp.open("GET", "/forum/deletePost/"+id);
+    xhttp.send();
+  }
+  }
+
+  function delComment(e) {
+      console.log(e.target.id);
+      var id=e.target.id;
+    var del = confirm("Are you sure that you want to delete this Comment?");
+  if (del == true) {
+   //console.log(id+" "+del);
+   const xhttp = new XMLHttpRequest();
+    xhttp.onload = function() {
+        if(this.responseText=="CommentDeleted"){
+            location.reload();
+        }
+    }
+    xhttp.open("GET", "/forum/deleteComment/"+id);
     xhttp.send();
   }
   }

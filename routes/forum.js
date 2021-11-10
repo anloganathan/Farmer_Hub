@@ -88,9 +88,25 @@ router.get('/deletePost/:id',(req,res)=>{
                 }
                 else{
                     console.log("Comments Deleted");
-                    res.send("deleted");
+                    req.flash('success_msg','Post Deleted Successfully!..');
+                    res.send("PostDeleted");
                 }
             })
+        }
+    })
+});
+
+router.get('/deleteComment/:id',(req,res)=>{
+    comments.deleteOne({_id:req.params.id},(err,response)=>{
+        if(err){
+            console.log(err);
+            console.log("Error deleting comment");
+        }
+        else{
+            console.log(response);
+            console.log("Comment deleted....");
+            req.flash('success_msg','Comment Deleted Successfully!..');
+            res.send("CommentDeleted")
         }
     })
 });

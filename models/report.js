@@ -21,6 +21,10 @@ const reportSchema = new mongoose.Schema({
     {
         data: Buffer,
         contentType: String
+    },
+    user:{
+        type:String,
+        required:true
     }
 });
 

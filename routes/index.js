@@ -57,7 +57,8 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
             disease:json.disease,
             plant:json.plant,
             remedy:json.remedy,
-            time:formatted_date()
+            time:formatted_date(),
+            user:req.user.name
         }
 
         report.create(obj, (err, item) => {
@@ -92,7 +93,7 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
 });
 
 router.get('/prevReport',ensureAuthenticated,(req,res)=>{
-    report.find({}, (err, items) => {
+    report.find({user:req.user.name}, (err, items) => {
         if (err) {
             console.log(err);
         }

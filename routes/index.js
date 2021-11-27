@@ -102,7 +102,23 @@ router.get('/prevReport',ensureAuthenticated,(req,res)=>{
             res.render('report',{items:items,name:req.user.name});
         }
     }).sort({_id:-1}).limit(10);
-})
+});
+
+router.get('/prevReport/deleteReport/:id',(req,res)=>{
+    report.deleteOne({_id:req.params.id},(err,response)=>{
+        if(err){
+            console.log(err);
+            console.log("Error deleting Report");
+        }
+        else{
+           // console.log(response);
+            console.log("Report deleted....");
+            req.flash('success_msg','Report Deleted Successfully!..');
+            res.send("ReportDeleted")
+        }
+    })
+});
+
 
 function ImgToBase64(file){
     return fs.readFileSync(file,'base64').toString();

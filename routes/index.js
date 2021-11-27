@@ -91,15 +91,16 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
     
 });
 
-router.get('/prevReport',(req,res)=>{
+router.get('/prevReport',ensureAuthenticated,(req,res)=>{
     report.find({}, (err, items) => {
         if (err) {
             console.log(err);
         }
         else {
-            res.send(items);
+            //res.send(items);
+            res.render('report',{items:items,name:req.user.name});
         }
-    });
+    }).sort({_id:-1}).limit(10);
 })
 
 function ImgToBase64(file){

@@ -2,9 +2,8 @@ require('dotenv').config();
 
 const express=require('express');
 const router=express.Router();
-const bcrypt=require('bcryptjs');
-const passport=require('passport');
-var nodemailer = require('nodemailer');
+
+
 
 //User model
 const User=require('../models/User');
@@ -19,13 +18,10 @@ router.get('/login',(req,res)=>{
     res.render('login');
 });
 
-//register page
-router.get('/register',(req,res)=>{
-    res.render('register');
-});
 
 //register handle
 router.post('/register',(req,res)=>{
+    console.log(req.body);
    const {name,email,password,password2}=req.body;
 
    let errors=[];
@@ -39,76 +35,37 @@ router.post('/register',(req,res)=>{
    }
 
    if(errors.length>0){
-        res.render('register',{
-        errors,
-        name,
-        email,
-        password,
-        password2
-        });
+
+        res.render('login',{errors:errors});
         
    }
    else{
        //Validation passed
-       User.findOne({email:email})
-       .then(user=>{
-           if(user){
-               //user exits
-               errors.push({msg:'Email is Already Registered!'});
-               res.render('register',{
-                errors,
-                name,
-                email,
-                password,
-                password2
-                });
-           }else{
-                const newuser= new User({
-                    name:name,
-                    email:email,
-                    password
-                });
-                
-                //hash password
-                bcrypt.genSalt(10,(err,salt)=>{
-                    bcrypt.hash(newuser.password,salt,(err,hash)=>{
-                        if(err) throw err;
-                        
-                        //set password as hash
-                        newuser.password=hash;
-                        //save user instance
-                        newuser.save()
-                        .then(user=>{
-                            req.flash('success_msg','You are registered successfully!');
-                            /*var transporter = nodemailer.createTransport({
-                                service: 'gmail',
-                                auth: {
-                                  user: process.env.guser,
-                                  pass: process.env.gpass
-                                }
-                              });
-                              
-                              var mailOptions = {
-                                from: process.env.gpass,
-                                to: user.email,
-                                subject: 'Sending Email using Node.js',
-                                text: 'You are registered successfully!'
-                              };
-                              
-                              transporter.sendMail(mailOptions, function(error, info){
-                                if (error) {
-                                  console.log(error);
-                                } else {
-                                  console.log('Email sent',info.response);
-                                }
-                              });*/
-                            //req.flash('error_msg','Something went wrong!');
-                            res.redirect('/users/login');
-                        })
-                        .catch(err=>console.log(err));
-
-                    })
+       User.findOne({email:email},(err,user)=>{
+           console.log(user);
+           if(err){
+               console.log(err);
+           }
+           else{
+            if(user!=null){
+                //user exits
+                errors.push({msg:'Email is Already Registered!'});
+                res.render('login',{errors:errors});
+            }else{
+                 const newuser= new User({
+                     name:name,
+                     email:email,
+                     password
+                 });
+                  
+                newuser.save()
+                .then(()=>{
+                    req.flash('success_msg','You are registered successfully!');
+                    req.session.user = newuser;
+                    res.redirect('/dashboard');
                 })
+                .catch(err=>console.log(err));
+            }
            }
        })
    }
@@ -116,17 +73,35 @@ router.post('/register',(req,res)=>{
 });
 
 router.post('/login',(req,res,next)=>{
-    passport.authenticate('local',{
-        successRedirect:'/dashboard',
-        failureRedirect:'/users/login',
-        failureFlash:true
-    })(req,res,next);
+    if(!req.body.email || !req.body.password){
+        
+        res.render('login',{error_msg:'Please fill all the fields'});
+    }
+    else{
+        User.findOne({email:req.body.email},(err,user)=>{
+            if(err){
+                console.log(err);
+            }
+            else{
+                if(user!=null && user.password==req.body.password){
+                    req.session.user = user;
+                    res.redirect('/dashboard');
+                }
+                else{
+                    res.render('login',{error_msg:'Oops!..Either Email or Password is incorrect!'})
+                }
+            }
+        })
+    }
 });
 
 //logout handle
 router.get('/logout',(req,res)=>{
-    req.logout();
+    
     req.flash('success_msg','You are Logged Out');
+    req.session.destroy(function(){
+        console.log("user logged out.")
+     });
     res.redirect('/users/login');
 })
 module.exports=router;

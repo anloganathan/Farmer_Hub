@@ -84,3 +84,17 @@ function delPost(id) {
     xhttp.send();
   }
   }
+
+
+  function loadMore() {
+    const xhttp = new XMLHttpRequest();
+    //console.log(id);
+    const cont=document.getElementsByTagName("BODY")[0];
+    xhttp.onload = function() {
+      cont.innerHTML=this.response;
+    console.log('Loaded all posts.....');
+    
+    }
+    xhttp.open("GET", "/forum/loadMorePosts");
+    xhttp.send();
+  }

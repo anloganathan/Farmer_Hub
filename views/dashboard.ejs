@@ -7,11 +7,11 @@
   <div class="w3-container w3-display-container w3-padding-16">
     <!--<i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>-->
     <h3 class="w3-wide"><b>Farmer Hub</b></h3>
-    <a href="#" class="w3-bar-item w3-button" style="text-decoration:none;" onclick="w3_close()"><%= name %></a>
+    <a href="#" class="w3-bar-item w3-button" style="text-decoration:none;" onclick="w3_close()"><%= user.name %></a>
     <hr>
     
     <a href="/dashboard" style="text-decoration:none;" class="active w3-bar-item w3-button" onclick="w3_close()">Dashboard</a>
-    <a href="/blogs" style="text-decoration:none;"class="w3-bar-item w3-button" onclick="w3_close()" >Blogs</a>
+    
     <a href="/forum" style="text-decoration:none;" class="w3-bar-item w3-button" onclick="w3_close()" >Forum</a>
     <a href="/prevReport" style="text-decoration:none;" class="w3-bar-item w3-button" onclick="w3_close()" >Reports</a>
     <hr>
@@ -69,7 +69,7 @@
                 <img class="file-upload-image" src="../images/image.png" alt="your image" style="width:90%;height:200px;" />
                 <br>
                 <br>
-
+                <input type="text" name="user" style="display:none;" value="<%= user.name %>">
               <input type='file'  name="image" onchange="readURL(this);" class="w3-btn w3-white w3-border w3-border-red w3-round-large" style="width:70%" accept="image/*" />
 
         

@@ -4,11 +4,11 @@
     <div class="w3-container w3-display-container w3-padding-16">
       <!--<i onclick="w3_close()" class="fa fa-remove w3-hide-large w3-button w3-display-topright"></i>-->
       <h3 class="w3-wide"><b>Farmer Hub</b></h3>
-      <a href="#" class="w3-bar-item w3-button" style="text-decoration:none;" id="user" onclick="w3_close()"><%= name %></a>
+      <a href="#" class="w3-bar-item w3-button" style="text-decoration:none;" id="user" onclick="w3_close()"><%= user.name %></a>
       <hr>
       
       <a href="/dashboard" style="text-decoration:none;" class="active w3-bar-item w3-button" onclick="w3_close()">Dashboard</a>
-      <a href="/blogs" style="text-decoration:none;"class="w3-bar-item w3-button" onclick="w3_close()" >Blogs</a>
+      
       <a href="/forum" style="text-decoration:none;" class="w3-bar-item w3-button" onclick="w3_close()" >Forum</a>
       <a href="/prevReport" style="text-decoration:none;" class="w3-bar-item w3-button" onclick="w3_close()" >Reports</a>
       <hr>
@@ -127,7 +127,7 @@
                     <h6>Posted by <%= posts[i].name %>  &nbsp; on  <%= posts[i].time.toDateString() %>  </h6>
                   </div>
                   <div class="col-2">
-                    <% if(posts[i].name==name){ %>
+                    <% if(posts[i].name==user.name){ %>
                     <div class="btn btn-danger fa fa-trash" style="float:right;margin-top:5px" onclick="delPost('<%= posts[i]._id %>')"></div>
                     <% } %>
                   </div>
@@ -148,7 +148,7 @@
                 <div class="col-12">
                   <form method="POST" action="/forum/reply">
                   <div class="input-group mb-3">
-                    <input type="text" name="name" style="display: none;" value="<%= name %>">
+                    <input type="text" name="name" style="display: none;" value="<%= user.name %>">
                     <input type="text" name="queryID" style="display: none;" value="<%= posts[i]._id %>">
                     <input type="text" name="reply" class="form-control" placeholder="Your reply" required>
                     <div class="input-group-append">
@@ -170,6 +170,8 @@
             
           <% } %>   
       <% } %>
+
+      <button class="w3-button w3-block w3-light-grey w3-panel w3-border w3-round-xlarge" style="padding: 20px;" onclick="loadMore()" ><b>Load More</b></button>
 
 
     </div>

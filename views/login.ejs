@@ -20,14 +20,14 @@
       </div>
     <% } %>
     
-    <% if(error!=''){ %>
-      <div class="alert alert-warning alert-dismissible fade show">
-        
-        <p><%= error %></p>
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        
-      </div>
-    <% } %>
+    <% if(typeof errors !='undefined'){ %>
+      <% errors.forEach(function(error){ %>
+        <div class="alert alert-danger alert-dismissible fade show">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <p><%= error.msg %></p>
+        </div>
+      <% }); %>
+      <% } %>
     
     <form method="GET" action="/">
       <button type="submit" class="btn btn-info" style="margin:2%;"> <-- Welcome Page</button>
@@ -37,16 +37,16 @@
         <div class="backbox">
           <div class="loginMsg">
             <div class="textcontent">
-              <p class="title">Don't have an account?</p>
-              <p>Sign up to save all your graph.</p>
+              <p class="title">Don't 've an account?</p>
+              <p>Sign up to explore</p>
               <button id="switch1">Sign Up</button>
             </div>
           </div>
           <div class="signupMsg visibility">
             <div class="textcontent">
               <p class="title">Have an account?</p>
-              <p>Log in to see all your collection.</p>
-              <button id="switch2">LOG IN</button>
+              <p>Log in to see to join Greenary Community</p>
+              <button id="switch2">Log In</button>
             </div>
           </div>
         </div>
@@ -54,26 +54,29 @@
     
         <div class="frontbox">
           <div class="login">
-            <h2>LOG IN</h2>
+            <h2>Log In</h2>
             <form action="/users/login" method="POST">
             <div class="inputbox">
               <input type="text" name="email" placeholder="  Email">
               <input type="password" name="password" placeholder="  Password">
             </div>
-            <p>FORGET PASSWORD?</p>
-            <button type="submit">LOG IN</button>
+            <p>Forget Password ?</p>
+            <button type="submit">Log In</button>
           </form>
           </div>
     
           <div class="signup hide">
-            <h2>SIGN UP</h2>
+            <h2>Sign up</h2>
+            <form action="/users/register" method="POST">
             <div class="inputbox">
-              <input type="text" name="fullname" placeholder="  Your Name">
+              <input type="text" name="name" placeholder="  Your Name">
               <input type="text" name="email" placeholder="  Email">
               <input type="password" name="password" placeholder="  Password">
               <input type="password" name="password2" placeholder=" Confirm Password">
             </div>
-            <button>SIGN UP</button>
+            <button type="submit">Sign up</button>
+          </form>
+            
           </div>
     
         </div>

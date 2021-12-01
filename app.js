@@ -4,13 +4,12 @@ const expressLayouts=require('express-ejs-layouts');
 const mongoose=require('mongoose');
 const db=process.env.DB_URL;
 const flash=require('connect-flash');
-const session=require('express-session');
-const passport=require('passport');
-
+var bodyParser = require('body-parser');
+var session = require('express-session');
+var cookieParser = require('cookie-parser');
 const app=express();
 app.use(express.static('public'));
-//passport config
-require('./config/passport')(passport);
+
 
 const connect = mongoose
   .connect(db, { useFindAndModify: false,useUnifiedTopology:true,useNewUrlParser:true })
@@ -32,9 +31,12 @@ app.use(session({
   saveUninitialized: true
 }));
 
-//passport middleware
-app.use(passport.initialize());
-app.use(passport.session());
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true })); 
+
+app.use(cookieParser());
+app.use(session({secret: "Your secret key"}));
 
 //connect flash
 app.use(flash());
@@ -52,7 +54,6 @@ app.use((req,res,next)=>{
 app.use('/',require('./routes/index'));
 app.use('/users',require('./routes/users'));
 app.use('/forum',require('./routes/forum'));
-app.use('/blogs',require('./routes/blog'));
 
 
 const PORT=process.env.PORT || 5000;

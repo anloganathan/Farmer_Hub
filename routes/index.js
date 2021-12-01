@@ -1,6 +1,5 @@
 const express=require('express');
 const router=express.Router();
-const {ensureAuthenticated}=require('../config/auth');
 var fs = require('fs');
 var path = require('path');
 const report=require('../models/report');
@@ -17,6 +16,7 @@ var storage = multer.diskStorage({
     }
 });
  
+
 var upload = multer({ storage: storage });
 
 var APIurl = "https://plant-disease-detector-pytorch.herokuapp.com/"
@@ -25,9 +25,21 @@ router.get('/',(req,res)=>{
     res.render('welcome');
 });
 
+function ensureAuthenticated(req, res,next){
+    if(req.session.user){
+       next();     //If session exists, proceed to page
+    } else {
+      // var err = new Error("Not logged in!");
+       console.log(req.session.user);
+       //next(err);  //Error, trying to access unauthorized page!
+       req.flash('error_msg','Please login to view this resource');
+        res.redirect('/users/login');
+    }
+ }
+
 router.get('/dashboard',ensureAuthenticated,(req,res)=>{
     res.render('dashboard',{
-        name:req.user.name,
+        user:req.session.user,
         disease:"",
         plant:"",
         remedy:""
@@ -58,7 +70,7 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
             plant:json.plant,
             remedy:json.remedy,
             time:formatted_date(),
-            user:req.user.name
+            user:req.body.user
         }
 
         report.create(obj, (err, item) => {
@@ -72,7 +84,7 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
         });
 
         res.render('dashboard',{
-            name:req.user.name,
+            user:req.session.user,
             disease:json.disease,
             plant:json.plant,
             remedy:json.remedy
@@ -93,15 +105,27 @@ router.post('/upload', upload.single('image'),ensureAuthenticated,(req, res) => 
 });
 
 router.get('/prevReport',ensureAuthenticated,(req,res)=>{
-    report.find({user:req.user.name}, (err, items) => {
+    report.find({user:req.session.user.name}, (err, items) => {
         if (err) {
             console.log(err);
         }
         else {
             //res.send(items);
-            res.render('report',{items:items,name:req.user.name});
+            res.render('report',{items:items,user:req.session.user});
         }
-    }).sort({_id:-1}).limit(10);
+    }).sort({_id:-1}).limit(1);
+});
+
+router.get('/loadMorePrevReports',ensureAuthenticated,(req,res)=>{
+    report.find({user:req.session.user.name}, (err, items) => {
+        if (err) {
+            console.log(err);
+        }
+        else {
+            //res.send(items);
+            res.render('report',{items:items,user:req.session.user});
+        }
+    }).sort({_id:-1});
 });
 
 router.get('/prevReport/deleteReport/:id',(req,res)=>{

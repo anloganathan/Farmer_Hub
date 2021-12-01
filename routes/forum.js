@@ -1,13 +1,13 @@
 const express=require('express');
 const router=express.Router();
-const {ensureAuthenticated}=require('../config/auth');
+
 const Post=require('../models/post');
 const comments=require('../models/comments');
-const { compareSync } = require('bcryptjs');
+
 
 router.post('/',ensureAuthenticated,(req,res)=>{
     var obj=new Post({
-        name:req.user.name,
+        name:req.session.user.name,
         query:req.body.post,
         time:Date.now()
     });
@@ -31,14 +31,29 @@ router.get('/',ensureAuthenticated,(req,res)=>{
         if(err){
             console.log("Error Fetching posts..");
             res.render('forum',{
-                name:req.user.name
+                user:req.session.user
             });
         }
         else{
             //console.log(r);
-            res.render('forum',{posts:r,name:req.user.name});
+            res.render('forum',{posts:r,user:req.session.user});
         }
-    }).sort({_id:-1}).limit(10);
+    }).sort({_id:-1}).limit(5);
+});
+
+router.get('/loadMorePosts',ensureAuthenticated,(req,res)=>{
+    Post.find({},(err,r)=>{
+        if(err){
+            console.log("Error Fetching posts..");
+            res.render('forum',{
+                user:req.session.user
+            });
+        }
+        else{
+            //console.log(r);
+            res.render('forum',{posts:r,user:req.session.user});
+        }
+    }).sort({_id:-1});
 });
 
 router.get('/loadComments/:id',(req,res)=>{
@@ -119,6 +134,20 @@ function formatted_date()
              " "+ d.getHours()+":"+d.getMinutes();
    return result;
 }
+
+
+function ensureAuthenticated(req, res,next){
+    if(req.session.user){
+       next();     //If session exists, proceed to page
+    } else {
+      // var err = new Error("Not logged in!");
+       console.log(req.session.user);
+       //next(err);  //Error, trying to access unauthorized page!
+       req.flash('error_msg','Please login to view this resource');
+        res.redirect('/users/login');
+    }
+ }
+
 
 
 module.exports=router;
